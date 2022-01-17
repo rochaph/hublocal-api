@@ -1,1 +1,1 @@
-web:nest npx prisma generate && npx prisma db push && npm run start:prod
+web: npx prisma generate && npx prisma db push && npm run start:prod

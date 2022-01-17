@@ -2,6 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import {
   HealthCheck,
   HealthCheckService,
+  HealthIndicatorFunction,
   HttpHealthIndicator,
 } from '@nestjs/terminus';
 import { ApiTags } from '@nestjs/swagger';
@@ -22,10 +23,16 @@ export class AppController {
   @HealthCheck()
   healthCheck() {
     const url = this.configService.get<string>('API_URL');
-
-    return this.health.check([
+    const indicators: HealthIndicatorFunction[] = [
       async () => await this.db.check('database'),
-      async () => await this.http.pingCheck('api', url),
-    ]);
+    ];
+
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
+
+    if (isDev) {
+      indicators.push(async () => await this.http.pingCheck('api', url));
+    }
+
+    return this.health.check(indicators);
   }
 }

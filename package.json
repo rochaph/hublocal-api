@@ -30,6 +30,8 @@
     "@nestjs/terminus": "^8.0.4",
     "@prisma/client": "^3.8.1",
     "cache-manager": "^3.6.0",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.2",
     "prisma": "3.8.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -79,8 +81,8 @@
     "testEnvironment": "node"
   },
   "prisma": {
-    "schema": "src/infrastructure/database/prisma/schema/schema.prisma",
-    "migrateOutput": "src/infrastructure/database/prisma/migrations"
+    "schema": "src/infrastructure/database/orm/prisma/schema/schema.prisma",
+    "migrateOutput": "src/infrastructure/database/orm/prisma/migrations"
   },
   "config": {
     "commitizen": {

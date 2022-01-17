@@ -30,10 +30,10 @@
     "@nestjs/terminus": "^8.0.4",
     "@prisma/client": "^3.8.1",
     "cache-manager": "^3.6.0",
+    "prisma": "3.8.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0",
-    "prisma": "3.8.1"
+    "rxjs": "^7.2.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^16.0.0",

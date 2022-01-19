@@ -1,9 +1,9 @@
-export default class Uf {
+export class Uf {
   public sigla: string;
   readonly id?: number;
 
   constructor(sigla: string, id?: number) {
-    this.id = id;
     this.sigla = sigla;
+    this.id = id;
   }
 }

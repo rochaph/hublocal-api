@@ -1,4 +1,4 @@
-import Uf from '../uf/Uf';
+import { Uf } from '../uf/Uf';
 
 export default class Endereco {
   public cep: number;
@@ -6,7 +6,7 @@ export default class Endereco {
   public bairro: string;
   public numero: number;
   public cidade: string;
-  public uf: Uf;
+  public uf?: Uf;
   readonly id?: number;
 
   constructor(
@@ -15,7 +15,7 @@ export default class Endereco {
     bairro: string,
     numero: number,
     cidade: string,
-    uf: Uf,
+    uf?: Uf,
     id?: number,
   ) {
     this.id = id;

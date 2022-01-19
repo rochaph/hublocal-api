@@ -19,16 +19,17 @@ export class UsuarioRepositoryPostgres implements UsuarioRepository {
 
   async findById(id: number) {
     const user = await this.client.usuario.findUnique({ where: { id } });
+    if (!user) return null;
     return new UsuarioMapper().map(user);
   }
 
   async findByLogin(login: string) {
     const user = await this.client.usuario.findUnique({ where: { login } });
-    if (!user) return user;
+    if (!user) return null;
     return new UsuarioMapper().map(user);
   }
 
-  async create(data: Omit<Usuario, 'id'>) {
+  async create(data: { login: string; senha: string }) {
     await this.client.usuario.create({ data });
   }
 

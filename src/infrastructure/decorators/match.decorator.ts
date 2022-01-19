@@ -20,9 +20,9 @@ export function Match(property: string, validationOptions?: ValidationOptions) {
 
 @ValidatorConstraint({ name: 'Match' })
 export class MatchConstraint implements ValidatorConstraintInterface {
-  validate(value: unknown, args: ValidationArguments) {
-    const [relatedPropertyName] = args.constraints;
-    const relatedValue = (args.object as unknown)[relatedPropertyName];
+  validate<T>(value: unknown, args: ValidationArguments & { object: T }) {
+    const [relatedPropertyName]: Array<keyof T> = args.constraints;
+    const relatedValue = args.object[relatedPropertyName];
     return value === relatedValue;
   }
 }

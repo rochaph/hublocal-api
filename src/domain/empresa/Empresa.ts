@@ -4,18 +4,18 @@ import Usuario from '../usuario/Usuario';
 
 export default class Empresa {
   public nome: string;
-  public cnpj: number;
+  public cnpj: bigint;
   public descricao: string;
-  public usuario: Usuario;
+  public usuario?: Pick<Usuario, 'id'>;
   public locais?: Local[];
   public responsaveis?: Responsavel[];
   readonly id?: number;
 
   constructor(
     nome: string,
-    cnpj: number,
+    cnpj: bigint,
     descricao: string,
-    usuario: Usuario,
+    usuario?: Pick<Usuario, 'id'>,
     locais?: Local[],
     responsaveis?: Responsavel[],
     id?: number,

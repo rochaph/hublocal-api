@@ -8,6 +8,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { PrismaHealthcheckService } from '../../infrastructure/database/orm/prisma/healthcheck/prisma.healthcheck.service';
+import { AllowUnauthorizedRequest } from '../../infrastructure/auth/allow-unauthorized';
 
 @ApiTags('Health Check')
 @Controller()
@@ -21,6 +22,7 @@ export class AppController {
 
   @Get()
   @HealthCheck()
+  @AllowUnauthorizedRequest()
   healthCheck() {
     const url = this.configService.get<string>('API_URL');
     const indicators: HealthIndicatorFunction[] = [

@@ -1,18 +1,20 @@
 import { CacheInterceptor, CacheModule, Module } from '@nestjs/common';
 import { AppController } from './presentation/app/app.controller';
 import { CacheService } from './infrastructure/cache/cache.service';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TerminusModule } from '@nestjs/terminus';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaHealthcheckModule } from './infrastructure/database/orm/prisma/healthcheck/prisma.healthcheck.module';
 import { HttpModule } from '@nestjs/axios';
-import { UsuarioModule } from './presentation/usuario/usuario.module';
 import { EmpresaModule } from './presentation/empresa/empresa.module';
 import { LocalModule } from './presentation/local/local.module';
-import { ResponsavelModule } from './presentation/responsavel/responsavel.module';
+import { AuthModule } from './presentation/auth/auth.module';
+import { JwtAuthGuard } from './infrastructure/auth/jwt-auth.guard';
+import { GlobalModule } from './global.module';
 
 @Module({
   imports: [
+    GlobalModule,
     HttpModule,
     TerminusModule,
     CacheModule.registerAsync({ useClass: CacheService }),
@@ -22,13 +24,16 @@ import { ResponsavelModule } from './presentation/responsavel/responsavel.module
       envFilePath: '../.env',
     }),
     PrismaHealthcheckModule,
-    UsuarioModule,
     EmpresaModule,
     LocalModule,
-    ResponsavelModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,

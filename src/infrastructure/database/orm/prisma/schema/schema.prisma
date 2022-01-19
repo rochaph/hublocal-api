@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -11,70 +12,75 @@ datasource db {
 }
 
 model Usuario {
-  id                Int         @id @default(autoincrement())
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-  login             String      @db.VarChar(255) @unique
-  senha             String      @db.VarChar(255)
-  empresas          Empresa[]
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  login     String    @unique @db.VarChar(255)
+  senha     String    @db.VarChar(255)
+  empresas  Empresa[]
 }
 
 model Empresa {
-  id                Int         @id @default(autoincrement())
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-  nome              String
-  cnpj              Int
-  descricao         String
-  locais            Local[]
-  responsaveis      Responsavel[]
-  usuario           Usuario     @relation(fields:[usuarioId], references:[id])
-  usuarioId         Int
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime?     @updatedAt
+  nome         String
+  cnpj         BigInt
+  descricao    String
+  locais       Local[]
+  responsaveis Responsavel[] @relation("EmpresaResponsaveis")
+  usuario      Usuario       @relation(fields: [usuarioId], references: [id])
+  usuarioId    Int
 }
 
 model Local {
-  id            Int         @id @default(autoincrement())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  nome          String
-  endereco      Endereco    @relation(fields:[enderecoId], references:[id])
-  enderecoId    Int
-  empresa       Empresa     @relation(fields:[empresaId], references: [id])
-  empresaId     Int
-  resposaveis   Responsavel[]
+  id                   Int           @id @default(autoincrement())
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime?     @updatedAt
+  nome                 String
+  endereco             Endereco      @relation(fields: [enderecoId], references: [id])
+  enderecoId           Int           @unique
+  empresa              Empresa       @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  empresaId            Int
+  resposaveis          Responsavel[] @relation("LocalResponsaveis")
+  responsavelPrincipal Responsavel   @relation("LocaisPrincipais", fields: [responsavelId], references: [id])
+  responsavelId        Int
 }
 
 model Responsavel {
-  id            Int         @id @default(autoincrement())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  nome          String
-  telefone      Int
-  endereco      Endereco    @relation(fields:[enderecoId], references:[id])
-  enderecoId    Int
-  locais        Local[]
-  empresas      Empresa[]
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime? @updatedAt
+  nome            String
+  telefone        BigInt
+  endereco        Endereco  @relation(fields: [enderecoId], references: [id])
+  enderecoId      Int       @unique
+  empresa         Empresa   @relation("EmpresaResponsaveis", fields: [empresaId], references: [id], onDelete: Cascade)
+  empresaId       Int
+  principal       Boolean   @default(false)
+  locais          Local[]   @relation("LocalResponsaveis")
+  locaisPrincipal Local[]   @relation("LocaisPrincipais")
 }
 
 model Endereco {
-  id            Int         @id @default(autoincrement())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  cep           Int
-  rua           String
-  bairro        String
-  numero        Int
-  cidade        String
-  uf            Uf          @relation(fields:[ufId], references:[id])
-  ufId          Int
-  responsavel   Responsavel?
-  local         Local?
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime?    @updatedAt
+  cep         Int
+  rua         String
+  bairro      String
+  numero      Int
+  cidade      String
+  uf          Uf           @relation(fields: [ufId], references: [id])
+  ufId        Int
+  responsavel Responsavel?
+  local       Local?
 }
 
 model Uf {
-  id            Int         @id @default(autoincrement())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  sigla         String
-  endereco      Endereco?
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime?  @updatedAt
+  sigla     String     @unique
+  endereco  Endereco[]
 }

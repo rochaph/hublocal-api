@@ -1,7 +1,13 @@
 export abstract class BaseRepository<Entity> {
-  abstract findAll(): Promise<Entity[]>;
+  abstract findAll(
+    usuarioId: number,
+    page?: number,
+    limit?: number,
+  ): Promise<Entity[]>;
 
-  abstract findById(id: number): Promise<Entity | null>;
+  abstract findById(usuarioId: number, id: number): Promise<Entity | null>;
+
+  abstract countByUsuario(usuarioId: number): Promise<number>;
 
   abstract create(data: Partial<Omit<Entity, 'id'>>): Promise<void>;
 

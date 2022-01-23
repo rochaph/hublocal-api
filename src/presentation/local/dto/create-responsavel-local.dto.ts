@@ -7,5 +7,5 @@ export class CreateResponsavelLocalDto extends CreateResponsavelDto {
   principalLocal: boolean;
 
   @IsEmpty()
-  principal: undefined | null;
+  principal: undefined;
 }

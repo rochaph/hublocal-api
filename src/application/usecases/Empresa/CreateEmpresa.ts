@@ -6,7 +6,8 @@ import { EmpresaFactory } from '../../factories/EmpresaFactory';
 import { EnderecoWithUfString } from '../../ports/Endereco';
 import { ResponsavelFactory } from '../../factories/ResponsavelFactory';
 import { LocalFactory } from '../../factories/LocalFactory';
-import { validatePrincipal } from '../../shared/validations';
+import { validatePrincipal } from '../../shared/Validations';
+import Empresa from '../../../domain/empresa/Empresa';
 
 @Injectable()
 export class CreateEmpresa {
@@ -19,15 +20,12 @@ export class CreateEmpresa {
     responsaveis,
     locais,
     usuarioId,
-  }: {
-    nome: string;
-    cnpj: bigint;
-    descricao: string;
+  }: Pick<Empresa, 'nome' | 'cnpj' | 'descricao'> & {
+    usuarioId: number;
     responsaveis: (Pick<Responsavel, 'nome' | 'telefone' | 'principal'> & {
       endereco: EnderecoWithUfString;
     })[];
     locais: (Pick<Local, 'nome'> & { endereco: EnderecoWithUfString })[];
-    usuarioId: number;
   }) {
     const empresa = new EmpresaFactory().create({ nome, cnpj, descricao });
 

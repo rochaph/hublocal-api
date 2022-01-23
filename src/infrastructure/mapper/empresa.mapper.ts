@@ -1,5 +1,5 @@
-import { Mapper } from './Mapper';
 import Empresa from '../../domain/empresa/Empresa';
+import { Mapper } from './mapper';
 
 type Entity = Empresa & { id: number };
 

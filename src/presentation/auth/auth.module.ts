@@ -8,9 +8,30 @@ import { UsuarioRepository } from '../../application/ports/UsuarioRepository';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from '../../infrastructure/auth/jwt.strategy';
 import { CreateUsuario } from '../../application/usecases/Usuario/CreateUsuario';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+JwtModule.registerAsync({
+  imports: [ConfigModule],
+  useFactory: () => ({
+    secret: new ConfigService().get('JWT_SECRET'),
+    signOptions: { expiresIn: '2h' },
+  }),
+  inject: [ConfigService],
+});
 
 @Module({
-  imports: [PassportModule],
+  imports: [
+    PassportModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: () => ({
+        secret: new ConfigService().get('JWT_SECRET'),
+        signOptions: { expiresIn: '2h' },
+      }),
+      inject: [ConfigService],
+    }),
+  ],
   providers: [
     LocalStrategy,
     JwtStrategy,

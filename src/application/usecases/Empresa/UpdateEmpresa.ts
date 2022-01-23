@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ApplicationException } from '../../exceptions/ApplicationException';
 import { EmpresaRepository } from '../../ports/EmpresaRepository';
 import Empresa from '../../../domain/empresa/Empresa';
-import { validateNotEmpty } from '../../factories/Validations';
+import { validateNotEmpty } from '../../shared/Validations';
 
 type UpdateEmpresaParams = Partial<
   Pick<Empresa, 'nome' | 'cnpj' | 'descricao'>
@@ -14,8 +14,8 @@ type UpdateEmpresaParams = Partial<
 export class UpdateEmpresa {
   constructor(private readonly empresaRepository: EmpresaRepository) {}
 
-  async execute(id: number, data: UpdateEmpresaParams) {
-    const empresa = await this.empresaRepository.findById(id);
+  async execute(usuarioId: number, id: number, data: UpdateEmpresaParams) {
+    const empresa = await this.empresaRepository.findById(usuarioId, id);
 
     if (!empresa) throw new ApplicationException('Not found');
 

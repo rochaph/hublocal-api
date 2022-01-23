@@ -4,7 +4,7 @@ import Usuario from '../usuario/Usuario';
 
 export default class Empresa {
   public nome: string;
-  public cnpj: bigint;
+  public cnpj: string;
   public descricao: string;
   public usuario?: Pick<Usuario, 'id'>;
   public locais?: Local[];
@@ -13,7 +13,7 @@ export default class Empresa {
 
   constructor(
     nome: string,
-    cnpj: bigint,
+    cnpj: string,
     descricao: string,
     usuario?: Pick<Usuario, 'id'>,
     locais?: Local[],

@@ -1,7 +1,7 @@
 import Factory from './Factory';
 import { ApplicationException } from '../exceptions/ApplicationException';
 import Empresa from '../../domain/empresa/Empresa';
-import { validateNotEmpty } from './Validations';
+import { validateNotEmpty } from '../shared/Validations';
 
 export class EmpresaFactory implements Factory<Empresa> {
   create({
@@ -10,7 +10,7 @@ export class EmpresaFactory implements Factory<Empresa> {
     descricao,
   }: {
     nome: string;
-    cnpj: bigint;
+    cnpj: string;
     descricao: string;
   }) {
     validateNotEmpty(nome, 'empresa nome');
@@ -19,8 +19,8 @@ export class EmpresaFactory implements Factory<Empresa> {
     return new Empresa(nome, cnpj, descricao);
   }
 
-  validateCnpj(cnpj: bigint) {
-    if (cnpj.toString().length !== 14) {
+  validateCnpj(cnpj: string) {
+    if (!!cnpj.match(new RegExp('^[0-9]+$')) && cnpj.length !== 14) {
       throw new ApplicationException('empresa cnpj should have 14 digits.');
     }
   }

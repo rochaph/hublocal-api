@@ -4,19 +4,18 @@ import {
   IsInt,
   IsNotEmpty,
   IsString,
-  ValidateIf,
+  Length,
 } from 'class-validator';
 import { UFS } from '../../../application/enums/UfEnum';
 
 export class CreateEnderecoDto {
   @IsEmpty()
-  id: undefined | null;
+  id: undefined;
 
-  @IsInt()
-  @ValidateIf((object, value) => {
-    if (typeof value !== 'number') return false;
-  })
-  cep: number;
+  @IsNotEmpty()
+  @IsString()
+  @Length(8, 8)
+  cep: string;
 
   @IsNotEmpty()
   @IsString()

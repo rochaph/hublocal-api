@@ -11,6 +11,7 @@ export class PrismaHealthcheckService extends HealthIndicator {
   public async check(key: string) {
     let isHealthy = true;
     let message = 'Up and running';
+
     try {
       await this.db.$connect();
     } catch (e) {

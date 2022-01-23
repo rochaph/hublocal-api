@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  hublocalapi:
+    container_name: hublocalapi
+    image: hublocalapi
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3001:3001
+    networks:
+      - hublocal-network
+
+  webserver:
+    container_name: hublocalapi-webserver
+    image: webserver
+    restart: always
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    ports:
+      - 8080:80
+    networks:
+      - hublocal-network
+    depends_on:
+      - hublocalapi
+
+networks:
+  hublocal-network:

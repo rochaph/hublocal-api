@@ -10,6 +10,7 @@ export class UpdateLocal {
   constructor(private readonly localRepository: LocalRepository) {}
 
   async execute(
+    usuarioId: number,
     id: number,
     data: Partial<
       Pick<Local, 'nome' | 'responsavelId'> & {
@@ -17,7 +18,7 @@ export class UpdateLocal {
       }
     >,
   ) {
-    const local = await this.localRepository.findById(id);
+    const local = await this.localRepository.findById(usuarioId, id);
     if (!local) throw new ApplicationException('Not found');
     let endereco = undefined;
 

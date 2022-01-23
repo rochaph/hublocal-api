@@ -1,5 +1,5 @@
 import Usuario from '../../domain/usuario/Usuario';
-import { Mapper } from './Mapper';
+import { Mapper } from './mapper';
 
 type Entity = Usuario & { id: number };
 

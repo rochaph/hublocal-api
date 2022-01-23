@@ -2,9 +2,9 @@ import Factory from './Factory';
 import Endereco from '../../domain/endereco/Endereco';
 import { ApplicationException } from '../exceptions/ApplicationException';
 import { UFS } from '../enums/UfEnum';
-import { validateNotEmpty } from './Validations';
 import { Uf } from '../../domain/uf/Uf';
 import { EnderecoWithUfString } from '../ports/Endereco';
+import { validateNotEmpty } from '../shared/Validations';
 
 export class EnderecoFactory
   implements Factory<Endereco | EnderecoWithUfString>
@@ -26,8 +26,8 @@ export class EnderecoFactory
     return new Endereco(cep, rua, bairro, numero, cidade, new Uf(uf));
   }
 
-  validateCep(cep: number) {
-    if (cep.toString().length !== 8) {
+  validateCep(cep: string) {
+    if (cep.match(new RegExp('^[0-9]+$')) && cep.length !== 8) {
       throw new ApplicationException(
         'endereco cep length should have 8 characters.',
       );
@@ -35,7 +35,7 @@ export class EnderecoFactory
   }
 
   validateNumero(numero: number) {
-    if (numero < 0) {
+    if (numero < 1) {
       throw new ApplicationException(
         'endereco numero should be greater than zero.',
       );

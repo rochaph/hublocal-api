@@ -1,4 +1,10 @@
-import { IsInt, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  Length,
+  Matches,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateEmpresaLocalDto } from './create-empresa-local.dto';
 import { CreateResponsavelEmpresaDto } from './create-responsavel-empresa.dto';
@@ -9,8 +15,10 @@ export class CreateEmpresaDto {
   nome: string;
 
   @IsNotEmpty()
-  @IsInt()
-  cnpj: bigint;
+  @IsString()
+  @Length(14, 14)
+  @Matches(new RegExp('^[0-9]+$'))
+  cnpj: string;
 
   @IsNotEmpty()
   @IsString()

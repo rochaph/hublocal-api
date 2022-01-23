@@ -13,28 +13,43 @@ export class EmpresaRepositoryPostgres implements EmpresaRepository {
     this.client = new PrismaClient();
   }
 
-  async findAll() {
+  async findAll(usuarioId: number, page?: number, limit?: number) {
+    const take = limit < 0 ? 0 : limit;
+    const skip = page > 1 ? (page - 1) * limit : 0;
+
     const empresas = await this.client.empresa.findMany({
+      where: { usuarioId },
       include: {
         responsaveis: { include: { endereco: true } },
         locais: { include: { endereco: true } },
       },
+      skip,
+      take,
+      orderBy: { nome: 'asc' },
     });
     return new EmpresaMapper().mapAll(empresas);
   }
 
-  async findById(id: number) {
-    const empresa = await this.client.empresa.findUnique({
-      where: { id },
+  async findById(usuarioId: number, id: number) {
+    const empresa = await this.client.empresa.findFirst({
+      where: { id, AND: { usuarioId } },
       include: { responsaveis: true, locais: { include: { endereco: true } } },
     });
     if (!empresa) return null;
     return new EmpresaMapper().map(empresa);
   }
 
+  async countByUsuario(usuarioId: number) {
+    const count = await this.client.empresa.count({
+      where: { usuarioId },
+    });
+
+    return count;
+  }
+
   async create(data: {
     nome: string;
-    cnpj: bigint;
+    cnpj: string;
     descricao: string;
     usuario: { id: number };
     responsaveis: (Pick<Responsavel, 'nome' | 'telefone' | 'principal'> & {
@@ -50,7 +65,7 @@ export class EmpresaRepositoryPostgres implements EmpresaRepository {
       locais,
       ...empresa
     } = data;
-    await this.client.$transaction(async (prisma) => {
+    await this.client.$transaction(async (prisma: PrismaClient) => {
       const { id: empresaId } = await prisma.empresa.create({
         data: {
           ...empresa,
@@ -78,7 +93,7 @@ export class EmpresaRepositoryPostgres implements EmpresaRepository {
       }
 
       const responsavelPrincipal = await prisma.responsavel.findFirst({
-        where: { principal: true, empresaId },
+        where: { principal: true, AND: { empresaId } },
       });
 
       for (const local of locais) {
@@ -111,16 +126,16 @@ export class EmpresaRepositoryPostgres implements EmpresaRepository {
     id: number,
     data: {
       nome?: string;
-      cnpj?: bigint;
+      cnpj?: string;
       descricao?: string;
       responsavelId?: number;
     },
   ) {
-    await this.client.$transaction(async (prisma) => {
+    await this.client.$transaction(async (prisma: PrismaClient) => {
       const { responsavelId, ...empresa } = data;
       if (responsavelId) {
         const responsavel = await prisma.responsavel.findFirst({
-          where: { id: responsavelId, empresaId: id },
+          where: { id: responsavelId, AND: { empresaId: id } },
         });
 
         if (!responsavel)

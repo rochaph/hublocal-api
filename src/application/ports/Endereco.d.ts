@@ -1,5 +1,5 @@
 export type EnderecoWithUfString = {
-  cep: number;
+  cep: string;
   rua: string;
   bairro: string;
   numero: number;

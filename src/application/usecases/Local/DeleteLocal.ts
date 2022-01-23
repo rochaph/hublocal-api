@@ -6,8 +6,8 @@ import { LocalRepository } from '../../ports/LocalRepository';
 export class DeleteLocal {
   constructor(private readonly localRepository: LocalRepository) {}
 
-  async execute(id: number) {
-    const local = await this.localRepository.findById(id);
+  async execute(usuarioId: number, id: number) {
+    const local = await this.localRepository.findById(usuarioId, id);
     if (!local) throw new ApplicationException('Not found');
 
     await this.localRepository.delete(id);

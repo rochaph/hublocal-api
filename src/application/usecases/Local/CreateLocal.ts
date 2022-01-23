@@ -4,7 +4,7 @@ import { EnderecoWithUfString } from '../../ports/Endereco';
 import { EmpresaRepository } from '../../ports/EmpresaRepository';
 import { LocalFactory } from '../../factories/LocalFactory';
 import { ResponsavelFactory } from '../../factories/ResponsavelFactory';
-import { validatePrincipal } from '../../shared/validations';
+import { validatePrincipal } from '../../shared/Validations';
 
 @Injectable()
 export class CreateLocal {
@@ -13,23 +13,26 @@ export class CreateLocal {
     private readonly empresaRepository: EmpresaRepository,
   ) {}
 
-  async execute({
-    nome,
-    endereco,
-    responsaveis,
-    empresaId,
-  }: {
-    nome: string;
-    endereco: EnderecoWithUfString;
-    responsaveis: {
+  async execute(
+    usuarioId: number,
+    {
+      nome,
+      endereco,
+      responsaveis,
+      empresaId,
+    }: {
       nome: string;
-      telefone: bigint;
       endereco: EnderecoWithUfString;
-      principalLocal: boolean;
-    }[];
-    empresaId: number;
-  }) {
-    const empresa = await this.empresaRepository.findById(empresaId);
+      responsaveis: {
+        nome: string;
+        telefone: string;
+        endereco: EnderecoWithUfString;
+        principalLocal: boolean;
+      }[];
+      empresaId: number;
+    },
+  ) {
+    const empresa = await this.empresaRepository.findById(usuarioId, empresaId);
 
     if (!empresa) {
       throw new BadRequestException('empresa not exists');

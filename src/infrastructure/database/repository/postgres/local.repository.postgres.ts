@@ -12,22 +12,29 @@ export class LocalRepositoryPostgres implements LocalRepository {
     this.client = new PrismaClient();
   }
 
-  async findAll() {
+  async findAll(usuarioId: number, page?: number, limit?: number) {
+    const take = limit && limit > 0 ? limit : 10;
+    const skip = limit && page && page > 0 ? (page - 1) * limit : 0;
+
     const local = await this.client.local.findMany({
+      where: { empresa: { usuarioId } },
       include: {
         empresa: true,
         endereco: { include: { uf: true } },
         resposaveis: true,
         responsavelPrincipal: true,
       },
+      skip,
+      take,
+      orderBy: { nome: 'asc' },
     });
 
     return new LocalMapper().mapAll(local);
   }
 
-  async findById(id: number) {
-    const local = await this.client.local.findUnique({
-      where: { id },
+  async findById(usuarioId: number, id: number) {
+    const local = await this.client.local.findFirst({
+      where: { id, AND: { empresa: { usuarioId } } },
       include: {
         empresa: true,
         endereco: { include: { uf: true } },
@@ -41,6 +48,14 @@ export class LocalRepositoryPostgres implements LocalRepository {
     return new LocalMapper().map(local);
   }
 
+  async countByUsuario(usuarioId: number) {
+    const count = await this.client.local.count({
+      where: { empresa: { usuarioId } },
+    });
+
+    return count;
+  }
+
   async create(data: {
     nome: string;
     empresaId: number;
@@ -50,7 +65,7 @@ export class LocalRepositoryPostgres implements LocalRepository {
       endereco: Omit<Endereco, 'id'>;
     })[];
   }) {
-    await this.client.$transaction(async (prisma) => {
+    await this.client.$transaction(async (prisma: PrismaClient) => {
       const { empresaId, endereco, responsaveis, ...local } = data;
 
       let responsavelId = 0;
@@ -106,7 +121,7 @@ export class LocalRepositoryPostgres implements LocalRepository {
       responsavelId?: number;
     },
   ) {
-    await this.client.$transaction(async (prisma) => {
+    await this.client.$transaction(async (prisma: PrismaClient) => {
       let responsavelPrincipal = undefined;
       let enderecoUpdate = undefined;
 
@@ -116,7 +131,7 @@ export class LocalRepositoryPostgres implements LocalRepository {
         });
 
         const responsavel = await prisma.responsavel.findFirst({
-          where: { id: responsavelId, empresaId: oldLocal.empresaId },
+          where: { id: responsavelId, AND: { empresaId: oldLocal.empresaId } },
         });
 
         if (!responsavel) {

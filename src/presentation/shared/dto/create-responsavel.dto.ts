@@ -1,4 +1,10 @@
-import { IsInt, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  Length,
+  Matches,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateEnderecoDto } from './create-endereco.dto';
 
@@ -8,8 +14,9 @@ export class CreateResponsavelDto {
   nome: string;
 
   @IsNotEmpty()
-  @IsInt()
-  telefone: bigint;
+  @Length(11, 11)
+  @Matches(new RegExp('^[0-9]+$'))
+  telefone: string;
 
   @IsNotEmpty()
   @ValidateNested()

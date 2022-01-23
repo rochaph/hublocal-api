@@ -31,17 +31,22 @@
     "@nestjs/swagger": "^5.1.5",
     "@nestjs/terminus": "^8.0.4",
     "@prisma/client": "^3.8.1",
+    "@types/helmet": "^4.0.0",
+    "@types/morgan": "^1.9.3",
     "bcrypt": "^5.0.1",
     "cache-manager": "^3.6.0",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.2",
+    "helmet": "^5.0.1",
+    "morgan": "^1.10.0",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "prisma": "3.8.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^16.0.0",
@@ -73,6 +78,9 @@
     "typescript": "^4.5.4"
   },
   "jest": {
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    },
     "moduleFileExtensions": [
       "js",
       "json",

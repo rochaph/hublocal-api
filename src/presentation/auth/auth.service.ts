@@ -1,9 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { GetUsuario } from '../../application/usecases/Usuario/GetUsuario';
 import { JwtService } from '@nestjs/jwt';
-import Usuario from '../../domain/usuario/Usuario';
 import { compare } from 'bcrypt';
-import { HashFactory } from '../../application/factories/HashFactory';
+import Usuario from '../../domain/usuario/Usuario';
 
 @Injectable()
 export class AuthService {
@@ -12,19 +11,23 @@ export class AuthService {
     readonly jwtService: JwtService,
   ) {}
 
-  async validateUsuario(login: string, senha: string): Promise<Usuario> {
+  async validateUsuario(login: string, password: string): Promise<Usuario> {
     const usuario = await this.getUsuario.getByLoginWithPassword(login);
 
-    const hash = await new HashFactory().create(senha);
-    if (!usuario || (await compare(hash, usuario.senha))) {
+    if (!usuario || !(await compare(password, usuario.senha))) {
       throw new UnauthorizedException();
     }
-    const { senha: usuarioSenha, ...result } = usuario;
+    const { senha, empresas, ...result } = usuario;
+
     return result;
   }
 
-  async login(usuario: { id: number }) {
-    const payload = this.jwtService.sign({ sub: usuario.id });
+  async login({
+    usuario: { id, login },
+  }: {
+    usuario: { id: number; login: string };
+  }) {
+    const payload = this.jwtService.sign({ usuario: { id, login } });
     return {
       access_token: payload,
     };

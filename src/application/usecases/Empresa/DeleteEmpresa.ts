@@ -6,8 +6,8 @@ import { ApplicationException } from '../../exceptions/ApplicationException';
 export class DeleteEmpresa {
   constructor(private readonly empresaRepository: EmpresaRepository) {}
 
-  async execute(id: number) {
-    const empresa = await this.empresaRepository.findById(id);
+  async execute(usuarioId: number, id: number) {
+    const empresa = await this.empresaRepository.findById(usuarioId, id);
     if (!empresa) throw new ApplicationException('Not found');
 
     await this.empresaRepository.delete(id);

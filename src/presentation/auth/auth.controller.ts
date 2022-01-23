@@ -13,10 +13,10 @@ import { AuthService } from './auth.service';
 import { CreateUsuario } from '../../application/usecases/Usuario/CreateUsuario';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { Response } from 'express';
-import { AllowUnauthorizedRequest } from '../../infrastructure/auth/allow-unauthorized';
 import { LocalAuthGuard } from '../../infrastructure/auth/local-auth.guard';
 import { GetUsuario } from '../../application/usecases/Usuario/GetUsuario';
-import { ApplicationExceptionFilter } from '../../infrastructure/filters/ApplicationExceptionFilter';
+import { ApplicationExceptionFilter } from '../../infrastructure/filters/application-exception.filter';
+import { RequestWithUser } from '../shared/types';
 
 @Controller('auth')
 @UseFilters(new ApplicationExceptionFilter())
@@ -28,22 +28,26 @@ export class AuthController {
   ) {}
 
   @Post('/login')
-  @AllowUnauthorizedRequest()
   @UseGuards(LocalAuthGuard)
-  async login(@Request() { user: { id } }: { user: { id: number } }) {
-    return this.authService.login({ id });
+  async login(@Request() req: RequestWithUser, @Res() res: Response) {
+    const token = await this.authService.login({ usuario: req.user });
+    res.status(HttpStatus.OK).json(token);
   }
 
   @Post('/register')
-  @AllowUnauthorizedRequest()
-  async create(@Body() usuario: CreateUsuarioDto, @Res() res: Response) {
+  async create(@Res() res: Response, @Body() usuario: CreateUsuarioDto) {
     await this.createUsuario.execute({
       login: usuario.login,
       senha: usuario.senha,
     });
     const registeredUsuario = await this.getUsuario.getByLogin(usuario.login);
     if (!registeredUsuario.id) throw new UnauthorizedException();
-    const token = await this.login({ user: { id: registeredUsuario.id } });
+    const token = await this.authService.login({
+      usuario: {
+        id: registeredUsuario.id,
+        login: registeredUsuario.login,
+      },
+    });
     res.status(HttpStatus.CREATED).json(token);
   }
 }

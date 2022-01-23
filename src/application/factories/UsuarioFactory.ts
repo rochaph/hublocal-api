@@ -1,7 +1,7 @@
 import Usuario from '../../domain/usuario/Usuario';
 import Factory from './Factory';
 import { HashFactory } from './HashFactory';
-import { validateLength } from './Validations';
+import { validateLength } from '../shared/Validations';
 
 export class UsuarioFactory implements Factory<Usuario> {
   async create({

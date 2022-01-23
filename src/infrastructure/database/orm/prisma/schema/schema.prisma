@@ -25,7 +25,7 @@ model Empresa {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime?     @updatedAt
   nome         String
-  cnpj         BigInt
+  cnpj         String
   descricao    String
   locais       Local[]
   responsaveis Responsavel[] @relation("EmpresaResponsaveis")
@@ -52,7 +52,7 @@ model Responsavel {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime? @updatedAt
   nome            String
-  telefone        BigInt
+  telefone        String
   endereco        Endereco  @relation(fields: [enderecoId], references: [id])
   enderecoId      Int       @unique
   empresa         Empresa   @relation("EmpresaResponsaveis", fields: [empresaId], references: [id], onDelete: Cascade)
@@ -66,7 +66,7 @@ model Endereco {
   id          Int          @id @default(autoincrement())
   createdAt   DateTime     @default(now())
   updatedAt   DateTime?    @updatedAt
-  cep         Int
+  cep         String
   rua         String
   bairro      String
   numero      Int

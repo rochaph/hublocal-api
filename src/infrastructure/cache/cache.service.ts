@@ -8,8 +8,7 @@ import {
 export class CacheService implements CacheOptionsFactory {
   createCacheOptions(): CacheModuleOptions {
     return {
-      ttl: 5,
-      max: 10,
+      ttl: 1,
       isGlobal: true,
     };
   }

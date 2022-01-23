@@ -3,7 +3,7 @@ import Endereco from '../endereco/Endereco';
 
 export default class Responsavel {
   public nome: string;
-  public telefone: bigint;
+  public telefone: string;
   public principal?: boolean;
   public endereco?: Endereco;
   public empresaId?: number;
@@ -12,7 +12,7 @@ export default class Responsavel {
 
   constructor(
     nome: string,
-    telefone: bigint,
+    telefone: string,
     principal?: boolean,
     endereco?: Endereco,
     empresaId?: number,

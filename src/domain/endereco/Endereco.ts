@@ -1,7 +1,7 @@
 import { Uf } from '../uf/Uf';
 
 export default class Endereco {
-  public cep: number;
+  public cep: string;
   public rua: string;
   public bairro: string;
   public numero: number;
@@ -10,7 +10,7 @@ export default class Endereco {
   readonly id?: number;
 
   constructor(
-    cep: number,
+    cep: string,
     rua: string,
     bairro: string,
     numero: number,

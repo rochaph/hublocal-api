@@ -1,5 +1,5 @@
-import { Mapper } from './Mapper';
 import Local from '../../domain/local/Local';
+import { Mapper } from './mapper';
 
 type Entity = Omit<Local, 'id'> & {
   id: number;

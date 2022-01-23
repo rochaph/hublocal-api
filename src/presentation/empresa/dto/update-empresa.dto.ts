@@ -1,13 +1,14 @@
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString, Length, Matches } from 'class-validator';
 
 export class UpdateEmpresaDto {
   @IsOptional()
   @IsString()
   nome?: string;
 
-  @IsOptional()
-  @IsInt()
-  cnpj?: bigint;
+  @IsString()
+  @Length(14, 14)
+  @Matches(new RegExp('^[0-9]+$'))
+  cnpj?: string;
 
   @IsOptional()
   @IsString()

@@ -24,6 +24,11 @@ import { Response } from 'express';
 import { QueryPagination, RequestWithUser } from '../shared/types';
 import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard';
 import { GetResponsavel } from '../../application/usecases/Responsavel/GetResponsavel';
+import {
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 @Controller('empresa')
 @UseFilters(ApplicationExceptionFilter)
@@ -38,6 +43,10 @@ export class EmpresaController {
   ) {}
 
   @Post()
+  @ApiCreatedResponse({
+    description: 'The record has been successfully created.',
+  })
+  @ApiForbiddenResponse({ status: 404, description: 'Bad Request.' })
   async create(
     @Res() res: Response,
     @Req() req: RequestWithUser,
@@ -51,6 +60,11 @@ export class EmpresaController {
   }
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'The record has been successfully created.',
+  })
+  @ApiForbiddenResponse({ status: 404, description: 'Bad Request.' })
   findAll(@Req() req: RequestWithUser, @Query() query: QueryPagination) {
     const page = query.page ? parseInt(query.page) : undefined;
     const limit = query.limit ? parseInt(query.limit) : undefined;

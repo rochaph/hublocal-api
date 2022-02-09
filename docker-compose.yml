@@ -2,8 +2,8 @@ version: '3.9'
 
 services:
   hublocalapi:
-    container_name: hublocalapi
-    image: hublocalapi
+    container_name: hublocal-api
+    image: 734980421251.dkr.ecr.sa-east-1.amazonaws.com/hublocal:hub-api
     restart: always
     build:
       context: .
@@ -16,12 +16,12 @@ services:
       - hublocal-network
 
   webserver:
-    container_name: hublocalapi-webserver
-    image: webserver
+    container_name: hublocal-webserver
+    image: 734980421251.dkr.ecr.sa-east-1.amazonaws.com/hublocal:hub-webserver
     restart: always
     build:
-      context: .
-      dockerfile: ./nginx/Dockerfile
+      context: ./nginx/
+      dockerfile: ./Dockerfile
     ports:
       - 8080:80
     networks:

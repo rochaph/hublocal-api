@@ -13,17 +13,24 @@ const helmetMiddleware = helmet as unknown as () => unknown;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.useGlobalPipes(new ValidationPipe());
+
   app.enableCors();
+
   app.use(helmetMiddleware());
+
   app.use(morgan('combined'));
+
   const config = new DocumentBuilder()
-    .setTitle('Hublocal api')
+    .setTitle('Hublocal API')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('Hublocal')
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(process.env.PORT || 3000);
 }

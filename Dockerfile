@@ -11,7 +11,7 @@ FROM build as final
 ENV NODE_ENV=production
 WORKDIR /app
 
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash curl
 COPY --from=build --chown=node /app/dist ./
 COPY ./scripts/init.sh init.sh
 RUN npm prune --production
